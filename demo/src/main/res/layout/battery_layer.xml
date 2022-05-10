@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/batteryLayer"
+    android:layout_width="wrap_content"
+    android:layout_height="80dp"
+    android:layout_below="@+id/simLayer"
+    android:background="#1000ff00"
+    android:gravity="center"
+    android:paddingStart="3dp"
+    android:paddingEnd="3dp"
+    android:layout_marginBottom="3dp">
+    <Button
+        android:id="@+id/btnBattery"
+        android:text="更新电量"
+        android:textSize="16sp"
+        android:textColor="#555555"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+    <CheckBox
+        android:id="@+id/cbBatteryCharge"
+        android:text="充电"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/btnBattery"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/cbBatteryCharge">
+        <EditText
+            android:id="@+id/etBattery"
+            android:hint="电量百分值（0~100）"
+            android:inputType="number"
+            android:gravity="center"
+            android:textColor="@android:color/holo_green_dark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.design.widget.TextInputLayout>
+</RelativeLayout>

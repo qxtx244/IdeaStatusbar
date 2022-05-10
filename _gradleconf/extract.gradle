@@ -1,0 +1,74 @@
+import java.nio.charset.Charset
+import java.util.zip.ZipFile
+
+/**
+ * 从aar中将文件拷贝出来。如果传来的输出路径是以路径分隔符”\“结尾，则创建目录树。因为对于aar来说，
+ * 如果存在文件夹，则这个文件夹必然会以一个空目录的形式在一级目录中存在，则这个entry的名称末尾必定是路径分隔符。
+ * 此时，只要先创建这个目录即可。
+ *
+ * @param is 源数据输入流
+ * @param outPath 输出绝对路径
+ * @see #extractAarFormat(String, String)
+ */
+private def getFileFromAar(InputStream is, String outPath) {
+    def f = file(outPath)
+    if (outPath.endsWith('\\') || outPath.endsWith('/')) {
+        f.mkdirs()
+    } else {
+        //这里其实是多余的，目录entry总是先于文件entry
+        def parentFile = f.parentFile
+        if (parentFile != null && !parentFile.exists()) {
+            f.parentFile.mkdirs()
+        }
+        f.withOutputStream { os ->
+            os << is
+        }
+    }
+}
+
+/**
+ * 解压aar文件，并输出为整理后的目录结构
+ * @param buildType 构建类型，如"debug", "release"等
+ * @param aarDir aar文件的绝对路径
+ * @param extractDir 解压到的目录绝对路径
+ */
+def extractAarFormat(String aarPath, String extractDir) {
+    if (aarPath == null || extractDir == null) return false
+
+    def srcFile = file(aarPath)
+    if (!srcFile.exists()) {
+        println "[${project.name}]未找到输出的aar文件"
+        return false
+    }
+    def aarName = srcFile.name
+
+    //解压
+    def zf = new ZipFile(aarPath, Charset.defaultCharset())
+    zf.entries().toList().each { entry ->
+        //println 'extract entry name=' + entry.name
+        def entryName = entry.name
+        def is = zf.getInputStream(entry)
+        if (entryName == 'classes.jar') {
+            //将jar重命名为aar文件的名称
+            def jarName = aarName.substring(0, aarName.lastIndexOf('.aar')) + '.jar'
+            getFileFromAar(is, "$extractDir/libs/$jarName")
+        } else if (entryName.startsWith('jni')) {
+            //去掉”jni“目录，改成放到”libs“目录里
+            entryName = entryName.substring(entryName.indexOf('jni\\') + 4)
+            getFileFromAar(is, "$extractDir/libs/$entryName")
+        } else if (entryName.startsWith('libs')
+                || entryName.startsWith('res')
+                || entryName.startsWith('assets')) {
+            getFileFromAar(is, "$extractDir/$entryName")
+        } else if (entryName == 'AndroidManifest.xml') {
+            //拷贝清单文件
+            getFileFromAar(is, "$extractDir/$entryName")
+        }
+    }
+    zf.close()
+    true
+}
+
+ext {
+    extractAarFormat = this.&extractAarFormat
+}

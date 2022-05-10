@@ -1,0 +1,96 @@
+//预置一些依赖库的信息
+
+ext {
+    //三方库版本
+    versions = [
+            'kotlin'     : '1.4.31',
+            'core_ktx'   : '1.3.2',
+            'greenDao'   : '3.3.0',
+            'navigation' : '2.3.5',
+            'objectbox'  : '2.9.1',
+            'eventBus'   : '3.0.0',
+            'appcompat'  : '1.3.0',
+            'material'   : '1.3.0',
+            'constrainlayout' : '2.0.4',
+            'multidex'   : '2.0.1',
+            'arouter'    : '1.5.2',
+            'aroutergp'  : '1.0.2',
+            'javapoet'   : '1.8.0'
+    ]
+
+    versions_support = [
+            'recyclerview': '26.0.0',
+            'appcompat'    : '26.0.0',
+            'gridlayout'   : '26.0.0',
+            'design'  : '26.0.0',
+            'multidex': '1.0.3',
+            'constrainlayout': '1.1.3'
+    ]
+
+    //依赖库。使用示例：
+    //依赖core-ktx：implementation depts.kt.core-ktx
+    //依赖kt相关的全部：depts.kt.each {k,v -> implementation v}
+    depts = [
+            kt: [
+                'core-ktx':"androidx.core:core-ktx:${versions.core_ktx}"
+            ],
+            objectbox: [
+                    'browser':"io.objectbox:objectbox-android-objectbrowser:${versions.objectbox}",
+            ],
+            jetpack: [
+                    navigation_ktx: [
+                            'navigation-fragment':"androidx.navigation:navigation-fragment-ktx:${versions.navigation}",
+                            'navigation-ui'        :"androidx.navigation:navigation-ui-ktx:${versions.navigation}"
+                    ],
+                    navigation: [
+                        'navigation-fragment':"androidx.navigation:navigation-fragment:${versions.navigation}",
+                        'navigation-ui'        :"androidx.navigation:navigation-ui:${versions.navigation}"
+                    ]
+            ],
+            arouter: [
+                    api       : 'com.alibaba:arouter-api:' + versions.arouter,
+                    compiler: 'com.alibaba:arouter-compiler:' + versions.arouter,
+            ],
+            eventBus : "org.greenrobot:eventbus:${versions.eventBus}",
+            multidex : "androidx.multidex:multidex:${versions.multidex}",
+            ftpserver: 'org.apache.ftpserver:ftpserver-core:1.1.1',
+            material : "com.google.android.material:material:${versions.material}",
+            constrainlayout: "androidx.constraintlayout:constraintlayout${versions.constrainlayout}",
+            javapoet         : 'com.squareup:javapoet:' + versions.javapoet,
+    ]
+
+    depts_support = [
+            appcompat    : 'com.android.support:appcompat-v7:' + versions_support.appcompat,
+            recyclerview: 'com.android.support:recyclerview-v7:' + versions_support.recyclerview,
+            gridlayout   : 'com.android.support:gridlayout-v7:' + versions_support.gridlayout,
+            design: 'com.android.support:design:' + versions_support.design,
+            multidex        : 'com.android.support:multidex:' + versions_support.multidext,
+            constraint_layout: 'com.android.support.constraint:constraint-layout:' + versions_support.constrainlayout
+    ]
+
+    //module的plugin id。使用示例：
+    // apply plugin: pluginIds.kotlin
+    // plugins { id pluginIds.kotlin }
+    pluginIds = [
+            //kotlin必需插件
+            'kotlin'               :'kotlin-android',
+            //可以让kotlin直接引用资源，不用findViewById...等，但更推荐viewBinding
+            'extensions'           :'kotlin-android-extensions',
+            'greendao'             :'org.greenrobot.greendao',
+            //可以为生成关于navigation action的导航安全类，不用记导航页的action名称
+            'navigation_safeargs' :'androidx.navigation.safeargs',
+            //objectbox必需插件
+            'objectbox'            :'io.objectbox',
+            'arouter'               : 'com.alibaba.arouter'
+    ]
+
+    //classpath依赖。使用示例
+    //classpath classpath.kotlin-gp
+    classpaths = [
+            'kotlingp'       :"org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+            'objectboxgp'   :"io.objectbox:objectbox-gradle-plugin:${versions.objectbox}",
+            'navigation_safeargsgp'  :"androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}",
+            'greendaogp'    : "org.greenrobot:greendao-gradle-plugin:${versions.greenDao}",
+            'aroutergp'     : 'com.alibaba:arouter-register:' + versions.aroutergp
+    ]
+}

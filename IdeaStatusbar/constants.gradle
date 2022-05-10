@@ -1,0 +1,33 @@
+
+/** 打包输出文件的名称 */
+def getOutputFileName(def libName, def versionName, def buildType) {
+    ("${libName}"
+            + "_${versionName}"
+            + "_${getTime("yyyyMMdd")}"
+            + "-${buildType}"
+    ).toString()
+}
+
+/**
+ * 输出的aar文件名称
+ * @param libName lib名称
+ * @param versionName 版本名称
+ * @param buildType 打包类型，debug/release/xxxDebug/xxxRelease
+ */
+def getAarName(def versionName, def buildType) {
+    ("${getOutputFileName(project.name, versionName, buildType)}.aar").toString()
+}
+
+ext {
+    //aar文件输出路径
+    aarOutputDir = "${rootDir.absolutePath}/aars/aar"
+
+    //aar解压到的路径
+    extractDir = "${rootDir.absolutePath}/aars/extract"
+
+    getAarName = this.&getAarName
+
+    unzipAar = this.&unzipAar
+
+    libBuildDate = getTime("yyyyMMdd")
+}

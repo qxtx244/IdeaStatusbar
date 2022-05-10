@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityChangeLayer"
+    android:text="点击测试不同背景色界面跳转"
+    android:textSize="16sp"
+    android:textColor="@color/black"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_below="@+id/networkTypeLayer"
+    android:background="#1000ff00"
+    android:gravity="center"
+    android:paddingStart="3dp"
+    android:paddingEnd="3dp"
+    android:layout_marginBottom="3dp"
+    tools:ignore="MissingDefaultResource">
+</Button>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SimSignalView">
+        <!-- 信号矩形圆角x轴半径占矩形x百分比，范围为[0f, 0.5f] -->
+        <attr name="roundRectRadiusX" format="float"/>
+        <!-- 信号矩形圆角y轴半径占矩形y百分比，范围为[0f, 0.5f] -->
+        <attr name="roundRectRadiusY" format="float"/>
+        <!-- 无效信号颜色 -->
+        <attr name="signalBgColor" format="color"/>
+        <!-- 主题色 -->
+        <attr name="signalThemeColor" format="color"/>
+        <!-- 主数据卡信号等级 -->
+        <attr name="primaryLevel" format="flags">
+            <flag name="disabled" value="-1"/>
+            <flag name="empty" value="0"/>
+            <flag name="low" value="1"/>
+            <flag name="normal" value="2"/>
+            <flag name="high" value="3"/>
+            <flag name="full" value="4"/>
+        </attr>
+        <!-- 副卡信号等级 -->
+        <attr name="subLevel" format="flags">
+            <flag name="disabled" value="-1"/>
+            <flag name="empty" value="0"/>
+            <flag name="low" value="1"/>
+            <flag name="normal" value="2"/>
+            <flag name="high" value="3"/>
+            <flag name="full" value="4"/>
+        </attr>
+
+    </declare-styleable>
+
+    <declare-styleable name="BatteryView">
+        <!-- 充电时电量填充色 -->
+        <attr name="chargingColor" format="color"/>
+        <!-- 主题色，包括电池外框，电量填充色（未充电） -->
+        <attr name="batteryThemeColor" format="color"/>
+        <!-- 电池图标充电动画电量级数（步进的级数），范围为[1, 100] -->
+        <attr name="chargingAnimScale" format="integer"/>
+        <!-- 充电动画执行一次循环的速度，单位为毫秒，范围为[1000, 1800 * 1000] -->
+        <attr name="chargingAnimSpeed" format="integer"/>
+
+        <!-- 电量百分比，方便实时预览效果 -->
+        <attr name="batteryFraction" format="float"/>
+        <!-- 充电状态，方便实时预览效果 -->
+        <attr name="isCharging" format="boolean"/>
+    </declare-styleable>
+
+<!--    <declare-styleable name="BaseStatusBar">-->
+<!--        &lt;!&ndash; 状态栏布局，如果无此属性，则状态栏无任何元素显示（空状态栏） &ndash;&gt;-->
+<!--        <attr name="layout" format="reference"/>-->
+<!--    </declare-styleable>-->
+</resources>

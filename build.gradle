@@ -1,0 +1,29 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.1.3' apply false
+    id 'com.android.library' version '7.1.3' apply false
+}
+
+subprojects {
+    def gradleConfPath = rootDir.absolutePath + "/_gradleconf"
+    def toolsScript = "$gradleConfPath/tools.gradle"
+    if (file(toolsScript).exists()) apply from: toolsScript
+
+    def basicScript = "$gradleConfPath/basic.gradle"
+    if (file(basicScript).exists()) apply from: basicScript
+
+    def dependsScript = "$gradleConfPath/dependencies.gradle"
+    if (file(dependsScript).exists()) apply from: dependsScript
+
+    //如果子project根目录存在constants.gradle文件，父工程将自动为其引入
+    def projConstantsScript = "${projectDir.absolutePath}/constants.gradle"
+    if (file(projConstantsScript).exists()) apply from: projConstantsScript
+
+    //向每个子module添加解压脚本
+    def extractScriptPath = "$gradleConfPath/extract.gradle"
+    if (file(extractScriptPath).exists()) apply from: extractScriptPath
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

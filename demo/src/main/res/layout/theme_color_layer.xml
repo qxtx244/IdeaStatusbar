@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/themeColorLayer"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="#1000ff00"
+    android:gravity="center"
+    android:layout_marginBottom="3dp"
+    android:paddingStart="3dp"
+    android:paddingEnd="3dp"
+    tools:ignore="MissingDefaultResource">
+    <Button
+        android:id="@+id/btnThemeColor"
+        android:text="更新主题色"
+        android:textSize="16sp"
+        android:textColor="#555555"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/btnThemeColor">
+        <EditText
+            android:id="@+id/etColor"
+            android:hint="请输入主题色值，格式：ffffff"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:inputType="textCapCharacters"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.design.widget.TextInputLayout>
+</RelativeLayout>

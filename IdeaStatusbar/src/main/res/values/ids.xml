@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- wifi图标 -->
+    <item name="sb_wifi" type="id"/>
+
+    <!-- sim信号 -->
+    <item name="sb_sim" type="id"/>
+
+    <!-- 电池 -->
+    <item name="sb_battery" type="id"/>
+
+    <!--  移动网络信号类型，为TextView或其子类 -->
+    <item name="sb_networkType" type="id"/>
+    <!-- 飞行模式图标 -->
+    <item name="sb_airplaneMode" type="id"/>
+    <!-- 耳机图标 -->
+    <item name="sb_headset" type="id"/>
+</resources>

@@ -1,0 +1,41 @@
+import java.text.SimpleDateFormat
+
+//预置一些辅助类变量
+
+//禁用一些没用的task，提升构建/编译速度。在android{}中执行。见ext.disableUnlessTask
+def disableUnitTest() {
+    tasks.findAll { task->
+        //禁止跑单元测试AndroidTest
+        def name = task.name
+        if (name.contains('AndroidTest') || name.contains('TestC')) {
+            println "Disable task: ${task.name}"
+            task.enabled(false)
+        }
+    }
+}
+
+/** 获取src/main/中AndroidManifest定义的包名 */
+def getManifestPackageName() {
+    def slurper = new XmlSlurper()
+    def file = file(project.projectDir.toString() + '/src/main/AndroidManifest.xml')
+    def ret = null
+    if (file.exists()) {
+        def result = slurper.parse(file)
+        ret = result['@package']
+    }
+    ret.toString()
+}
+
+/**
+ * 获取当前时间
+ * @param format 时间格式，如“yyyy/MM/dd HH:mm:ss:SSS”表示“年/月/日 时:分:秒:毫秒”
+ */
+def getTime(String format) {
+    new SimpleDateFormat(format).format(new Date())
+}
+
+ext {
+    disableUnitTest = this.&disableUnitTest
+    getManifestPkgName = this.&getManifestPackageName
+    getTime = this.&getTime
+}

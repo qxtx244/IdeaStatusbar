@@ -1,0 +1,51 @@
+//基础配置
+
+/**
+ * 获取本地maven仓库绝对路径，如果父目录不存在，则自动创建。
+ * 为避免路径过长，建议最多一级子目录。
+ * 例：
+ *  getLocalMavenCentral()返回$localMavenCentral
+ *  getLocalMavenCentral('sdk')返回$localMavenCentral\\sdk
+ *
+ * @param subDir 子目录相对路径。如果为空，则使用默认路径localMavenCentral
+ * @return 本地maven仓库绝对路径
+ */
+def getLocalMavenCentral(def subPath) {
+    def dir = "file://${System.getProperties().getProperty('user.home')}\\.mavenCentral"
+    if (subPath != null && !subPath.isEmpty()) {
+        dir += "/$subPath"
+    }
+    if (!new File(dir).exists()) {
+        mkdir(dir)
+    }
+    dir
+}
+
+ext {
+    //本地maven仓库地址，windows平台的路径为：用户目录/.mavenCentral
+    localMavenCentral = this.&getLocalMavenCentral
+
+    //gradle预置脚本目录绝对路径
+    gradleConfPath = "${rootDir.absolutePath}/_gradleconf"
+
+    //android library发布到maven仓库的实现脚本的绝对路径
+    androidMavenConfPath = "$gradleConfPath/maven_publish_android.gradle"
+    //java library发布到maven仓库的实现脚本的绝对路径
+    javaMavenConfPath = "$gradleConfPath/maven_publish_java.gradle"
+
+    //基础仓库+自定义仓库
+    aliRepo = [
+            'https://maven.aliyun.com/repository/central',
+            'https://maven.aliyun.com/repository/public',
+            'https://maven.aliyun.com/repository/google',
+            'https://maven.aliyun.com/repository/gradle-plugin',
+    ]
+
+    jdk8Ver = JavaVersion.VERSION_1_8
+
+    buildGradleVer = '4.2.0'
+    minSdkVer = 24
+    compileSdkVer = 31
+    buildToolsVer = '28.0.0'
+    targetSdkVer = 26
+}

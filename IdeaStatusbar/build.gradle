@@ -1,0 +1,49 @@
+
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion compileSdkVer
+
+    defaultConfig {
+        minSdkVersion minSdkVer
+        versionCode 1
+        versionName '1.0.0'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            shrinkResources false
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
+            consumerProguardFile('consumer-rules.pro')
+        }
+    }
+    compileOptions {
+        sourceCompatibility jdk8Ver
+        targetCompatibility jdk8Ver
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFileName.endsWith(".aar")) {
+                def destDir = "${aarOutputDir}/${variant.name}"
+                variant.getPackageLibrary().destinationDir = file(destDir)
+                outputFileName = getAarName(android.defaultConfig.versionName, variant.name)
+                println "[${project.name}] aar file=$outputFileName, output path=$destDir"
+            }
+        }
+    }
+}
+
+dependencies {
+    compileOnly depts_support.appcompat
+}
+
+gradle.buildFinished {
+	//默认只解包release版本的aar文件
+	def aarName = getAarName(android.defaultConfig.versionName, 'release')
+	extractAarFormat("$aarOutputDir/release/$aarName", "$extractDir/${project.name}")
+}

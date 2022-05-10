@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".MainActivity">
+
+    <include layout="@layout/theme_color_layer" />
+
+    <include layout="@layout/sim_layer" />
+
+    <include layout="@layout/battery_layer" />
+
+    <include layout="@layout/airplane_layer" />
+
+    <include layout="@layout/headset_layer" />
+
+    <include layout="@layout/network_type_layer" />
+
+    <include layout="@layout/activity_change_layer" />
+
+    <!-- 显示点啥，以填补空白 -->
+    <TextView
+        android:id="@+id/customView"
+        android:text="当前处于调试模式，可按返回键重新选择状态栏模式"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 默认的自定义状态栏布局 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@android:color/black"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    tools:layout_hetight="54dp">
+
+    <View
+        android:id="@id/sb_airplaneMode"
+        android:layout_width="26dp"
+        android:layout_height="29dp"
+        android:background="@drawable/sb_airplane_mode_ic"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:ignore="ContentDescription" />
+
+    <com.qxtx.idea.statusbar.view.SimSignalView
+        android:id="@id/sb_sim"
+        android:layout_width="29dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
+        android:visibility="gone"
+        tools:signalBgColor="#676767"
+        tools:signalThemeColor="#ffffff"
+        tools:visibility="visible"
+        tools:primaryLevel="2"
+        tools:subLevel="4"
+        tools:roundRectRadiusX="0.2"
+        tools:roundRectRadiusY="0.2"/>
+
+    <FrameLayout
+        android:id="@+id/networkTypeLayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <View
+            android:id="@id/sb_networkType"
+            android:layout_width="33dp"
+            android:layout_height="25dp"
+            android:background="@drawable/sb_network_wifi_3_ic"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginStart="5dp"
+            tools:ignore="ContentDescription"/>
+        <View
+            android:id="@+id/networkTypeGray"
+            android:layout_width="33dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/sb_network_wifi_3_ic"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:ignore="ContentDescription"/>
+
+<!--        <View-->
+<!--            android:id="@+id/upLink"-->
+<!--            android:layout_width="3dp"-->
+<!--            android:layout_height="9dp"-->
+<!--            android:layout_marginStart="31dp"-->
+<!--            android:layout_gravity="top"-->
+<!--            android:background="@drawable/sb_network_uplink_ic"-->
+<!--            android:visibility="gone"-->
+<!--            tools:visibility="visible"/>-->
+<!--        <View-->
+<!--            android:id="@+id/downLink"-->
+<!--            android:layout_marginStart="31dp"-->
+<!--            android:layout_width="3dp"-->
+<!--            android:layout_height="9dp"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            android:background="@drawable/sb_network_downlink_ic"-->
+<!--            android:visibility="gone"-->
+<!--            tools:visibility="visible"/>-->
+    </FrameLayout>
+
+    <View
+        android:id="@id/sb_headset"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/sb_headset_ic"
+        android:layout_marginStart="5dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:ignore="ContentDescription"/>
+
+    <!-- 自定义图标区域 -->
+    <!-- LYX_TAG 2021/9/17 0:27 必须计算最大宽度，否则将会影响右端的电量显示 -->
+    <LinearLayout
+        android:id="@+id/customLayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+    </LinearLayout>
+
+    <!-- LYX_TAG 2021/9/7 9:46 可以把电量百分比也集成到自定义view中 -->
+    <LinearLayout
+        android:id="@id/sb_battery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|end">
+
+        <com.qxtx.idea.statusbar.view.BatteryView
+            android:id="@+id/batteryIcon"
+            android:layout_width="16dp"
+            android:layout_height="24dp"
+            app:chargingColor="@android:color/holo_green_light"
+            app:batteryThemeColor="@android:color/white"
+            app:chargingAnimSpeed="6000"
+            app:chargingAnimScale="10"
+            tools:batteryFraction="0.5f"
+            tools:isCharging="true"/>
+
+        <TextView
+            android:id="@+id/batteryText"
+            android:textSize="26sp"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:layout_marginStart="5dp"
+            tools:text="50%"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+</LinearLayout>

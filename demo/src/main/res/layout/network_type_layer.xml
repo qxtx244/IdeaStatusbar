@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/networkTypeLayer"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_below="@+id/headsetLayer"
+    android:background="#1000ff00"
+    android:gravity="center"
+    android:paddingStart="3dp"
+    android:paddingEnd="3dp"
+    android:layout_marginBottom="3dp">
+    <TextView
+        android:id="@+id/tvNetworkTypeTitle"
+        android:text="网络类型："
+        android:textStyle="bold"
+        android:textColor="#888888"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"/>
+
+    <Spinner
+        android:id="@+id/spNetworkType"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/tvNetworkTypeTitle"
+        android:layout_alignBottom="@+id/tvNetworkTypeTitle"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tvNetworkTypeTitle"
+        tools:listitem="@layout/support_simple_spinner_dropdown_item" />
+</RelativeLayout>

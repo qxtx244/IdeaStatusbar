@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="networkType">
+        <item>NONE</item>
+        <item>WIFI（full）</item>
+        <item>WIFI（low）</item>
+        <item>3G</item>
+        <item>4G</item>
+        <item>5G</item>
+    </string-array>
+</resources>

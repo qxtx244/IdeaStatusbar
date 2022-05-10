@@ -1,0 +1,205 @@
+
+/**
+ * 发布到maven仓库的实现，适用于android library
+ *
+ * 配置方法：
+ * 1. 在目标module的build.gradle中添加代码：
+ *     如果是java library：
+ *       //源代码路径，可使用多个路径，绝对路径和相对路径均可
+ *       ext.pomSourceDirs = ["src/main/groovy", "xxx/src/main/java", ...]
+ *       ext.pomGroupId = 'a.b.xxx' //一般用library的包名
+ *       ext.pomVersionName = '1.2.3' //版本名称
+ *       apply from: javaMavenConfPath
+ *     如果是android library：
+ *       //由于需要使用android插件中的变量，必须将以下代码添加到android{}之后，建议放到build.gradle最底部
+ *       // 当然，也可以配置一些关键参数。如果未配置，则使用默认值：
+ *       apply from: androidMavenConfPath
+ * 2. sync工程，然后build构建项目，执行assemble打包项目；
+ * 3. 点击展开AS右侧的"Gradle"面板，依次展开project层级目录》Tasks》upload，双击执行"uploadArchives"任务，等待执行完成。
+ *
+ * 注意，因为需要一些android插件中的变量，因此必须在android{}之后配置，建议放到build.gradle的最后面
+ *
+ * 允许在外部配置关键参数，可使用的ext变量如下（在build.gradle中配置：ext.xxx = yyy）。当未定义时，将取默认值
+ * pomMavenAccount   maven账户信息，ArrayList<String>类型，格式：['USER', 'PASSWORD']
+ * pomMavenCentral   maven仓库地址，String类型
+ * pomGroupId        String类型
+ * pomArtifactId    String类型
+ * pomVersionName   String类型
+ * pomDesc           描述信息，String类型
+ * pomSrcDirs       源码目录，ArrayList<String>类型，格式：['xx', 'yy', ...]
+ */
+
+apply plugin: 'maven'
+apply from: "${gradleConfPath}/basic.gradle"
+
+/**
+ * 获取maven私服验证信息，即账户和密码。如果为null，则表示不需要使用账户密码
+ * @return 账户和密码
+ */
+private ArrayList<String> getPomMavenAccount() {
+    getPomExt("pomMavenAccount")
+}
+
+/**
+ * 获取maven仓库地址，如果ext未定义，使用本地Maven仓库
+ * @return maven仓库地址
+ */
+private String getPomMavenCentral() {
+    def url = getPomExt("pomMavenCentral")
+    if (url == null) url = localMavenCentral()
+    if (url == null) throw new Exception("无法获取maven仓库地址！")
+    url.toString()
+}
+
+/**
+ * 获取groupId，如果ext未定义，则默认获取AndroidManifest.xml中定义的包名
+ * @return groupId
+ */
+private String getPomGroupId() {
+    def groupId = null
+    try {
+        groupId = getPomExt("pomGroupId")
+        if (groupId == null) {
+            def slurper = new XmlSlurper()
+            def file = file('src/main/AndroidManifest.xml')
+            if (file.exists()) {
+                def result = slurper.parse(file)
+                groupId = result['@package']
+            }
+        }
+        if (groupId == null) throw Exception("无法获取groupId！")
+        groupId = groupId.toString().replaceAll('/', '\\.').replaceAll('\\\\', '\\.')
+    } catch (Exception e) {
+        e.printStackTrace()
+    }
+    groupId.toString()
+}
+
+/**
+ * 获取artifactId，如果ext未定义，则使用project名称
+ * @return artifactId
+ */
+private String getPomArtifactId() {
+    def artifactId = getPomExt("pomArtifactId")
+    if (artifactId == null) artifactId = project.name
+    if (artifactId == null) throw Exception("无法获取artifactId！")
+    artifactId.toString()
+}
+
+/**
+ * 获取versionName，如果ext中未定义，则默认获取defaultConfig中定义的versionName
+ * @return versionName
+ */
+private String getPomVersion() {
+    def versionName = getPomExt("pomVersionName")
+    if (versionName == null) versionName = android.defaultConfig.versionName
+    if (versionName == null) throw Exception("无法获取versionName！")
+    versionName.toString()
+}
+
+/**
+ * 获取描述信息
+ * 如果ext未定义，则为空
+ * @return 描述信息
+ */
+private String getPomDesc() {
+    def desc = getPomExt("pomDesc")
+    if (desc == null) desc = ''
+    desc.toString()
+}
+
+/**
+ * 获取源码目录，如果ext未定义，则取main中的默认资源目录
+ * @return 可能为null
+ */
+private ArrayList<String> getPomSrcDirs() {
+    def dirs = getPomExt("pomSrcDirs")
+    if (dirs == null) dirs = android.sourceSets.main.java.srcDirs
+    dirs
+}
+
+private def getPomExt(String name) {
+    def extMap = getExtensions().extraProperties
+    if (extMap.has(name)) return extMap.get(name)
+    null
+}
+
+//maven配置闭包
+uploadArchives {
+    repositories.mavenDeployer {
+        def centralUrl = getPomMavenCentral()
+        repository('url': centralUrl) {
+            def info = getPomMavenAccount()
+            if (info != null) {
+                authentication(userName: info[0], password: info[1])
+            }
+            pom.project {
+                groupId      getPomGroupId()
+                artifactId   getPomArtifactId()
+                version      getPomVersion()
+                description  getPomDesc()
+            }
+        }
+    }
+
+    doLast {
+        def centralUrl = getPomMavenCentral()
+        def pomArtifact = getPomArtifactId()
+        def groupId = getPomGroupId()
+        def versionName = getPomVersion()
+        def fullyPath = "$centralUrl/$groupId/$pomArtifact"
+        println "${pomArtifact} 模块的maven仓库：$fullyPath, 最新版本为${versionName}. See $centralUrl"
+    }
+}
+
+task androidJavadocs(type: Javadoc) {
+    options {
+        encoding('utf-8')
+        links 'http://docs.oracle.com/javase/8/docs/api'
+    }
+
+    failOnError = false
+
+    source getPomSrcDirs()
+
+    //为javadoc添加android.jar依赖包，防止报错找不到相关类
+    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    classpath += files(ext.androidJar)
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs, group: 'extension') {
+    getArchiveClassifier().set('javadoc')
+
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar, group: 'extension') {
+    getArchiveClassifier().set('sources')
+    from getPomSrcDirs()
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+def pomVersion = getPomVersion()
+def pomArtifact = getPomArtifactId()
+def pkgPath = getPomGroupId().replaceAll("\\.", "/")
+def outputDir = "${getPomMavenCentral()}/$pkgPath/$pomArtifact/$version"
+//这些task仅适用于本地maven
+task zipRelease(type: Zip) {
+    from outputDir
+    destinationDir buildDir
+    archiveName "${pomArtifact}-${pomVersion}.zip"
+}
+
+/** 手动执行此任务，将得到zip包，路径为目标module的build目录下 */
+task generateZip(group: 'extension') {
+    doLast {
+        println "打包Zip: ${buildDir}/${pomArtifact}-${pomVersion}.zip"
+        println "输出目录：$outputDir"
+    }
+}
+generateZip.dependsOn(uploadArchives)
+generateZip.dependsOn(zipRelease)
